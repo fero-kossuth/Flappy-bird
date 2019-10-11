@@ -18,6 +18,8 @@ class Game:
         self.Red = [255, 0, 0]
         self.Black = [0, 0, 0]
         self.White = [255, 255, 255]
+        self.autoplay = False
+
 
     def new(self):
         self.walls = pygame.sprite.Group()
@@ -49,6 +51,7 @@ class Game:
             if pygame.sprite.collide_mask(self.player, self.walls_lower) or pygame.sprite.collide_mask(self.player,
                                                                                                        self.walls_upper):
                 self.player.death()
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.stop = True
@@ -60,6 +63,13 @@ class Game:
                         self.fps += 10
                     if event.key == pygame.K_MINUS:
                         self.fps -= 10
+                    if event.key == pygame.K_a:
+                        self.autoplay ^= True
+            
+            if self.autoplay:
+                if self.walls_lower.pos.y - 4 <= self.player.pos.y:
+                    self.player.jump()
+            
             self.all_sprites.update()
             if self.update_count != 280:
                 self.update_count += 1
